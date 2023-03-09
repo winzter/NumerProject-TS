@@ -4,10 +4,11 @@ import TableOutput from '../components/TableOutput';
 import { evaluate } from 'mathjs'
 import Header from '../components/Header';
 import Chart from '../components/Chart';
+import { useClickOutside } from '@mantine/hooks';
+import { IconAlertTriangle } from '@tabler/icons-react';
 import {
   Group,
   Grid,
-  Notification,
   Transition,
   Alert,
   Dialog
@@ -38,6 +39,7 @@ interface LabelForm {
 function Falsepos() {
 
     const data:FalsePostionObject[] =[];
+    const clickOutside = useClickOutside(()=>{setInValid(false)})
     const [InValid,setInValid] = useState<boolean>(false)
     const [UserInput,setUserInput] = useState({
       Equation:"(x^4)-13",
@@ -78,8 +80,15 @@ function Falsepos() {
             if(check > 0){
               setInValid(true)
               setStatus(false)
+              setUserInput((prevState)=>{
+                return{
+                  ...prevState,
+                  X:0
+                }
+              })
               return
             }
+            setStatus(true) 
             do
             {
               fXl = evaluate(UserInput.Equation,{[Scope]:xl})
@@ -149,7 +158,7 @@ function Falsepos() {
             })
             setNewData(data);
             // setEqu(fx);
-            setStatus(true)   
+             
             // setHtml(print(Scope));
             // setId("#test");
         }
@@ -232,11 +241,14 @@ function Falsepos() {
                 data={newData} 
                 label={label}
             />}
-            {InValid && <Dialog opened={InValid} withBorder={false} style={{padding:0}}>
-              <Notification color='red' onClose={()=>{setInValid(false)}} title="Error">Invalid XL or XR</Notification>
-            </Dialog>
-            }
-              
+            
+            <Transition mounted={InValid} transition="slide-up" duration={1000} timingFunction='ease'>
+                  {(styles)=><Dialog opened={InValid} withBorder={false} style={{...styles,padding:0}}>
+                    <Alert color='red' ref={clickOutside} icon={<IconAlertTriangle strokeWidth={2.5}/>} variant='filled' title="Invalid Input!!">
+                      Please check your input XL or XR
+                    </Alert>
+                </Dialog>}
+            </Transition>
         </>
     )
 }
