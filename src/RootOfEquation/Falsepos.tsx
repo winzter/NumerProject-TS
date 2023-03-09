@@ -7,6 +7,10 @@ import Chart from '../components/Chart';
 import {
   Group,
   Grid,
+  Notification,
+  Transition,
+  Alert,
+  Dialog
 } from '@mantine/core';
 
 interface FalsePostionObject {
@@ -34,6 +38,7 @@ interface LabelForm {
 function Falsepos() {
 
     const data:FalsePostionObject[] =[];
+    const [InValid,setInValid] = useState<boolean>(false)
     const [UserInput,setUserInput] = useState({
       Equation:"(x^4)-13",
       X:0,
@@ -67,6 +72,14 @@ function Falsepos() {
             var iter = 0;
             var MAX = 50;
             var obj: FalsePostionObject = {} as FalsePostionObject;
+            fXl = evaluate(UserInput.Equation,{[Scope]:xl})
+            fXr = evaluate(UserInput.Equation, {[Scope]:xr})
+            let check:number = fXl*fXr;
+            if(check > 0){
+              setInValid(true)
+              setStatus(false)
+              return
+            }
             do
             {
               fXl = evaluate(UserInput.Equation,{[Scope]:xl})
@@ -215,11 +228,15 @@ function Falsepos() {
                 </Grid.Col>
               </Grid>
             </Group>
-            
-            {Status && <TableOutput
+            {Status &&<TableOutput
                 data={newData} 
                 label={label}
             />}
+            {InValid && <Dialog opened={InValid} withBorder={false} style={{padding:0}}>
+              <Notification color='red' onClose={()=>{setInValid(false)}} title="Error">Invalid XL or XR</Notification>
+            </Dialog>
+            }
+              
         </>
     )
 }

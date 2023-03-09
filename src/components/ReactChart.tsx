@@ -8,6 +8,7 @@ import {
   Title,
   Tooltip,
   Legend,
+  LogarithmicScale,
 } from 'chart.js';
 import { Line } from 'react-chartjs-2';
 
@@ -19,6 +20,7 @@ ChartJS.register(
     Title,
     Tooltip,
     Legend,
+    LogarithmicScale
   );
   
   const options = {
