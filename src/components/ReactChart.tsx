@@ -61,7 +61,7 @@ function ReactChart({dataChart}:chartData) {
     
   };
   
-  const labels = dataChart.map((x)=>x.iteration);
+  const labels = dataChart.map((x)=>x.Err);
   
   const data = {
     labels,
