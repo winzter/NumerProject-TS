@@ -5,9 +5,14 @@ import TableOutput from '../components/TableOutput';
 import Header from '../components/Header';
 import ReactChart from '../components/ReactChart';
 import Chart from '../components/Chart';
+import { useClickOutside } from '@mantine/hooks';
+import { IconAlertTriangle } from '@tabler/icons-react';
 import {
   Group,
   Grid,
+  Transition,
+  Alert,
+  Dialog
 } from '@mantine/core';
 
 interface BisectionObject {
@@ -36,6 +41,8 @@ interface LabelForm {
 function Bisection() {
 
     const [newData, setNewData] = useState<BisectionObject[]>([]);
+    const [InValid,setInValid] = useState<boolean>(false)
+    const clickOutside = useClickOutside(()=>{setInValid(false)})
     const [UserInput , setUserInput] = useState({
       Equation:"(x^4)-13",
       X:0,
@@ -66,11 +73,25 @@ function Bisection() {
     const error = (xold: number, xnew: number): number => Math.abs((xnew - xold) / xnew) * 100;
 
     const Calbisection = (xl: number, xr: number,Scope:string): void => {
-        let xm, fXm, fXr, ea=100;
+        setStatus(true)
+        let xm, fXm, fXr,fXl, ea=100;
         let iter = 0;
         const MAX = 50;
         let obj: BisectionObject = {} as BisectionObject;
-        
+        fXl = evaluate(UserInput.Equation,{[Scope]:xl})
+        fXr = evaluate(UserInput.Equation, {[Scope]:xr})
+        let check:number = fXl*fXr;
+        if(check > 0){
+          setInValid(true)
+          setStatus(false)
+          setUserInput((prevState)=>{
+            return{
+              ...prevState,
+              X:0
+            }
+          })
+          return
+        }
         do {
           xm = (xl + xr) / 2.0;
           fXr = evaluate(UserInput.Equation, { [Scope]: xr });
@@ -126,7 +147,6 @@ function Bisection() {
         const Scope:any = Regex(UserInput.Equation);
         Calbisection(xlnum, xrnum,Scope);
         setNewData(data)
-        setStatus(true);
         // setEqu(fx);
         // setHtml(print(Scope));
         setUserInput((prevState)=>{
@@ -211,11 +231,18 @@ function Bisection() {
           </Grid.Col>
         </Grid>
         </Group>
-        <ReactChart/>
+        <ReactChart dataChart={newData}/>
       {Status && <TableOutput 
         data={newData} 
         label={label}
       />}
+      <Transition mounted={InValid} transition="slide-up" duration={1000} timingFunction='ease'>
+        {(styles)=><Dialog opened={InValid} withBorder={false} style={{...styles,padding:0}}>
+            <Alert color='red' ref={clickOutside} icon={<IconAlertTriangle strokeWidth={2.5}/>} variant='filled' title="Invalid Input!!">
+              Please check your input XL or XR
+            </Alert>
+          </Dialog>}
+        </Transition>
     </>
   )
 }
