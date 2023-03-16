@@ -51,12 +51,13 @@ function ReactChart({dataChart}:chartData) {
       },
     },
     tooltips: {
-        callbacks: {
-          label: function(tooltipItem:any) {
-            return tooltipItem.yLabel.toFixed(5); // set the number of decimal places here
-          }
+      callbacks: {
+        label: function(tooltipItem:any) {
+          return tooltipItem.yLabel.toFixed(5); // set the number of decimal places here
         }
-      },
+      }
+    },
+    
       
     
   };
@@ -74,7 +75,7 @@ function ReactChart({dataChart}:chartData) {
     ],
   };
   return (
-    <div>
+    <div style={{width:"500px",height:"600px"}}>
         <Line  data={data} options={options} />
     </div>
   )

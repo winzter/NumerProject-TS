@@ -3,7 +3,6 @@ import { evaluate } from 'mathjs';
 import InputForm from '../components/InputForm';
 import TableOutput from '../components/TableOutput';
 import Header from '../components/Header';
-import ReactChart from '../components/ReactChart';
 import Chart from '../components/Chart';
 import { useClickOutside } from '@mantine/hooks';
 import { IconAlertTriangle } from '@tabler/icons-react';
@@ -14,20 +13,21 @@ import {
   Alert,
   Dialog
 } from '@mantine/core';
+import EquationChart from '../components/EquationChart';
 
 interface BisectionObject {
-    iteration: number;
-    Xl: number;
-    Xm: number;
-    Xr: number;
-    Err: number;
-    ErrNotDecimal: number;
-  }
+  iteration: number;
+  Xl: number;
+  Xm: number;
+  Xr: number;
+  Err: number;
+  ErrNotDecimal: number;
+}
 interface LabelBisecFalse{
-    Xl: string;
-    Xm: string;
-    Xr: string;
-    Err: string;
+  Xl: string;
+  Xm: string;
+  Xr: string;
+  Err: string;
 }
 
 interface LabelForm {
@@ -36,11 +36,15 @@ interface LabelForm {
     labelXR:string
 }
 
+interface X{
+  x:number
+}
 
 
 function Bisection() {
 
     const [newData, setNewData] = useState<BisectionObject[]>([]);
+    const [valueX,setValueX] = useState<X[]>([])
     const [InValid,setInValid] = useState<boolean>(false)
     const clickOutside = useClickOutside(()=>{setInValid(false)})
     const [UserInput , setUserInput] = useState({
@@ -56,6 +60,7 @@ function Bisection() {
     // const [id, setId] = useState<string>('#t');
 
     const data: BisectionObject[] = [];
+    const dataX:X[] = []
     
     const labelForm: LabelForm = {
       labelFX:`Input f(${UserInput.starter})`,
@@ -63,10 +68,10 @@ function Bisection() {
       labelXR:`Input ${UserInput.starter.toUpperCase()}R`
     }
     const label: LabelBisecFalse = {
-        Xl:`${UserInput.starter.toUpperCase()}L`,
-        Xm:`${UserInput.starter.toUpperCase()}M`,
-        Xr:`${UserInput.starter.toUpperCase()}R`,
-        Err:`Error`
+      Xl:`${UserInput.starter.toUpperCase()}L`,
+      Xm:`${UserInput.starter.toUpperCase()}M`,
+      Xr:`${UserInput.starter.toUpperCase()}R`,
+      Err:`Error`
     }
     
     
@@ -78,9 +83,13 @@ function Bisection() {
         let iter = 0;
         const MAX = 50;
         let obj: BisectionObject = {} as BisectionObject;
+        let X:X = {} as X
+
         fXl = evaluate(UserInput.Equation,{[Scope]:xl})
         fXr = evaluate(UserInput.Equation, {[Scope]:xr})
+
         let check:number = fXl*fXr;
+
         if(check > 0){
           setInValid(true)
           setStatus(false)
@@ -92,6 +101,7 @@ function Bisection() {
           })
           return
         }
+
         do {
           xm = (xl + xr) / 2.0;
           fXr = evaluate(UserInput.Equation, { [Scope]: xr });
@@ -100,6 +110,7 @@ function Bisection() {
     
           if (fXm * fXr > 0) {
             ea = error(xr, xm);
+            X = { x:xm }
             obj = {
               iteration: iter,
               Xl: xl,
@@ -108,10 +119,12 @@ function Bisection() {
               Err: ea,
               ErrNotDecimal: Math.round(ea),
             };
+            dataX.push(X)
             data.push(obj);
             xr = xm;
           } else if (fXm * fXr < 0) {
             ea = error(xl, xm);
+            X = { x:xm}
             obj = {
               iteration: iter,
               Xl: xl,
@@ -120,6 +133,7 @@ function Bisection() {
               Err: ea,
               ErrNotDecimal: Math.round(ea),
             };
+            dataX.push(X)
             data.push(obj);
             xl = xm;
           }
@@ -147,6 +161,7 @@ function Bisection() {
         const Scope:any = Regex(UserInput.Equation);
         Calbisection(xlnum, xrnum,Scope);
         setNewData(data)
+        setValueX(dataX)
         // setEqu(fx);
         // setHtml(print(Scope));
         setUserInput((prevState)=>{
@@ -231,7 +246,7 @@ function Bisection() {
           </Grid.Col>
         </Grid>
         </Group>
-        <ReactChart dataChart={newData}/>
+        <EquationChart dataX={valueX} Equation={UserInput.Equation} RegX={UserInput.starter}/>
       {Status && <TableOutput 
         data={newData} 
         label={label}

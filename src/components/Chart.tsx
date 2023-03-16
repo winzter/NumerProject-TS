@@ -42,7 +42,7 @@ function Chart({data}:Props) {
             <YAxis scale="log" domain={['auto', 'auto']} />
             <Tooltip />
             <Legend />
-            <Line type="monotone" strokeWidth={2} dataKey="Err" stroke={`#${Math.floor(Math.random()*16777215).toString(16)}`} />
+            <Line type="monotone" strokeWidth={2} dataKey="Err" stroke={`#${Math.floor(Math.random()*16777215).toString(16)}`}  />
             <Line type="monotone" strokeWidth={2} dataKey="Xm" stroke={`#${Math.floor(Math.random()*16777215).toString(16)}`} />
           </LineChart>
         </div>
