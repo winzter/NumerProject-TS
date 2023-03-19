@@ -1,21 +1,26 @@
-import React , {useState} from 'react'
+import React , {useEffect, useState} from 'react'
 import { Group,Card } from '@mantine/core'
 import { evaluate } from 'mathjs';
 import {
     Line,
-    LineChart,
+    Scatter,
     XAxis,
     YAxis,
     CartesianGrid,
+    LineChart,
+    ReferenceDot,
     Tooltip,
     ReferenceLine,
+    Legend,
+    ComposedChart,
+    ScatterChart
 } from 'recharts'
 
 
 interface chartData{
-    dataX:Array<{x:number}>,
     Equation:string,
-    RegX:string
+    RegX:string,
+    Ans:number
 }
 
 interface XY{
@@ -23,103 +28,149 @@ interface XY{
     y:number
 }
 
-interface ArrayXY{
-    data:XY[]
-}
 
-function EquationChart({dataX,Equation,RegX}:chartData) {
-    const [dataPoint,setDataPoint] = useState<ArrayXY[]>()
-    let objectXY:XY = {} as XY;
-    let dataCal = [];
+function EquationChart({Equation,RegX,Ans}:chartData) {
 
+    const [dataPoint,setDataPoint] = useState<XY[]>([{x:0,y:0}])
+    const [minX,setMinX] = useState(0);
+    const [minY,setMinY] = useState(0);
+    const [Answer,setAnswer] = useState<XY[]>([])
+    let dataCal:XY[] = [];
+    Ans = Number(Ans.toFixed(6))
+    
     const CalculateXY = ()=>{
-        let y = dataX.map((e)=>evaluate(Equation,{[RegX]:e.x}))
-    }
-    const data = [
-        {
-          x: -50,
-          y: -50,
-        },
-        {
-          x: 0,
-          y: 0,
-        },
-        {
-          x: 50,
-          y: 50,
-        },
-        {
-          x: 100,
-          y: 100,
-        },
-        {
-          x: 150,
-          y: 150,
-        },
-        {
-          x: 200,
-          y: 200,
-        },
-        {
-          x: 250,
-          y: 250,
-        },
-        {
-          x: 350,
-          y: 350,
-        },
-        {
-          x: 400,
-          y: 400,
-        },
-        {
-          x: 450,
-          y: 450,
-        },
-        {
-          x: 500,
-          y: 500,
-        },
-      ];
-      const minX = Math.min(...data.map((d)=>d.x))
-      const minY = Math.min(...data.map((d)=>d.y))
+        let dataX = Array.from({length:20},(_,i)=>(i+1)*(-1));
+        dataX.sort((a,b)=>b-a).reverse()
+        
+        let dataX2 = Array.from({length:21},(_,i)=>i)
+        dataX2.sort((a,b)=>a-b) 
+        let allDataX = [...dataX,...dataX2]
+        
+        let dataY = allDataX.map((e)=>evaluate(Equation,{[RegX]:e}))
+        dataCal = dataY.map((element,index)=>{
+          return{
+            x:allDataX[index],
+            y:Number(element.toFixed())
+          }
+        })
+        setMinX(Math.min(...dataCal.map((d)=>d.x)))
+        setMinY(Math.min(...dataCal.map((d)=>d.y)))
+        setDataPoint(dataCal)
+
+        const AnsData = [Ans*-1,Ans]
+        let RefDot = AnsData.map((e)=>evaluate(Equation,{[RegX]:e}))
+        
+         setAnswer(RefDot.map((e,index)=>{
+          return{
+            x:AnsData[index],
+            y:e.toFixed()
+          }
+        }).filter((e)=>e.y == 0))
+        console.log(Equation);
+      }
+
+
+    useEffect(()=>{
+      CalculateXY()
+    },[])
+
+
   return (
-    
-    
-    <Group position='center'>
+    <Group position='center' mt="md">
       <Card shadow="md" p="sm" radius="md" withBorder>
         <div>
-        
-        <LineChart
-          width={1000}
-          height={500}
-          margin={{
-            top: 30,
-            right: 30,
-            left: 20,
-            bottom: 30,
-          }}
-        >
-            <Tooltip/>
-            <CartesianGrid strokeDasharray="3 3" />
+          <ScatterChart
+            width={1000}
+            height={500}
+            margin={{
+              top: 20,
+              right: 20,
+              bottom: 20,
+              left: 20,
+            }}
+          >
+            <CartesianGrid />
+            <XAxis 
+              dataKey="x"
+              name='X'
+              domain={['auto', 'auto']}
+              interval={0}
+              type="number"
+              label={{
+                  key: 'xAxisLabel',
+                  value: 'X',
+                  position: 'bottom',
+              }}
+              allowDataOverflow={true}
+              strokeWidth={minY < 0 ? 0 : 1} 
+            />
 
+            <YAxis 
+              dataKey="y"
+              domain={['auto', 'auto']}
+              type="number"
+              name='Y'
+              interval={0}
+              label={{
+                  value: `Y`,
+                  style: { textAnchor: 'middle' },
+                  position: 'left',
+                  offset: 10,
+              }}
+              allowDataOverflow={true}
+              strokeWidth={minX < 0 ? 0 : 1}
+            />
+            {minY < 0 && (
+                  <ReferenceLine
+                    y={0}
+                    stroke="gray"
+                    strokeWidth={1.5}
+                    strokeOpacity={0.65}
+                  />
+              )}
+              {minX < 0 && (
+                  <ReferenceLine
+                    x={0}
+                    stroke="gray"
+                    strokeWidth={1.5}
+                    strokeOpacity={0.65}
+                  />
+              )}
+            
+            <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+            <Scatter  data={dataPoint} fill="black" line name='Equation'/>
+            <Scatter  data={Answer} fill="red"/>
+          </ScatterChart>
+          {/* <LineChart
+            data={dataCal}
+            width={1000}
+            height={500}
+            margin={{
+              top: 30,
+              right: 30,
+              left: 20,
+              bottom: 30,
+            }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
             <YAxis
                 dataKey="y"
                 domain={['auto', 'auto']}
                 type="number"
+                name='Y'
                 interval={0}
                 label={{
                     value: `Y`,
                     style: { textAnchor: 'middle' },
                     position: 'left',
-                    offset: 0,
+                    offset: 10,
                 }}
                 allowDataOverflow={true}
                 strokeWidth={minX < 0 ? 0 : 1}
-            />
-
+              />
             <XAxis
                 dataKey="x"
+                name='X'
                 domain={['auto', 'auto']}
                 interval={0}
                 type="number"
@@ -131,7 +182,6 @@ function EquationChart({dataX,Equation,RegX}:chartData) {
                 allowDataOverflow={true}
                 strokeWidth={minY < 0 ? 0 : 1}
             />
-
             {minY < 0 && (
                 <ReferenceLine
                 y={0}
@@ -148,18 +198,25 @@ function EquationChart({dataX,Equation,RegX}:chartData) {
                 strokeOpacity={0.65}
                 />
             )}
-
+            <Tooltip/>
+             <Line
+                strokeWidth={0}
+                data={dataPoint}
+                type="monotone"
+                dataKey="x"
+                dot={false}
+                stroke="black"
+                name='X'
+            />
             <Line
-                onClick={CalculateXY}
                 strokeWidth={2}
-                data={data}
+                data={dataPoint}
                 type="monotone"
                 dataKey="y"
                 stroke="black"
-                tooltipType="none"
+                name='Y'
             />
-        </LineChart>
-      
+          </LineChart> */}
         </div>
       </Card>
     </Group>

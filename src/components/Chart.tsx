@@ -39,7 +39,7 @@ function Chart({data}:Props) {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="iteration"/>
-            <YAxis scale="log" domain={['auto', 'auto']} />
+            {data.length !== 1 ? <YAxis scale="log" domain={['auto', 'auto']} />:<YAxis/>}
             <Tooltip />
             <Legend />
             <Line type="monotone" strokeWidth={2} dataKey="Err" stroke={`#${Math.floor(Math.random()*16777215).toString(16)}`}  />

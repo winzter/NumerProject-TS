@@ -44,9 +44,9 @@ interface X{
 function Bisection() {
 
     const [newData, setNewData] = useState<BisectionObject[]>([]);
-    const [valueX,setValueX] = useState<X[]>([])
     const [InValid,setInValid] = useState<boolean>(false)
     const clickOutside = useClickOutside(()=>{setInValid(false)})
+    const [PropsEquation,setPropsEquation] = useState("(x^4)-13")
     const [UserInput , setUserInput] = useState({
       Equation:"(x^4)-13",
       X:0,
@@ -55,9 +55,8 @@ function Bisection() {
       Error:0.000001,
       starter:"x"
     })
-    // const [Equ, setEqu] = useState<any[]>([]);
+ 
     const [Status, setStatus] = useState<boolean>(false);
-    // const [id, setId] = useState<string>('#t');
 
     const data: BisectionObject[] = [];
     const dataX:X[] = []
@@ -90,7 +89,7 @@ function Bisection() {
 
         let check:number = fXl*fXr;
 
-        if(check > 0){
+        if(check >= 0 || xl > xr){
           setInValid(true)
           setStatus(false)
           setUserInput((prevState)=>{
@@ -132,10 +131,24 @@ function Bisection() {
               Xr: xr,
               Err: ea,
               ErrNotDecimal: Math.round(ea),
-            };
+            }
             dataX.push(X)
             data.push(obj);
             xl = xm;
+          }else{
+            ea = 0;
+            X = { x:xm}
+            obj = {
+              iteration: iter,
+              Xl: xl,
+              Xm: xm,
+              Xr: xr,
+              Err: ea,
+              ErrNotDecimal: Math.round(ea),
+            }
+            dataX.push(X)
+            data.push(obj);
+            break
           }
         } while (ea > UserInput.Error && iter < MAX);
     
@@ -155,22 +168,18 @@ function Bisection() {
     
     const calculateRoot = (e: React.FormEvent<HTMLFormElement>) =>{
         e.preventDefault();
-        // let fx: {fn: string}[] = [{fn:`${Equation ? Equation : 0}`}];
         const xlnum: number = UserInput.XL;
         const xrnum: number = UserInput.XR;
         const Scope:any = Regex(UserInput.Equation);
         Calbisection(xlnum, xrnum,Scope);
+        setPropsEquation(UserInput.Equation)
         setNewData(data)
-        setValueX(dataX)
-        // setEqu(fx);
-        // setHtml(print(Scope));
         setUserInput((prevState)=>{
           return{
             ...prevState,
             starter:Scope
           }
         })
-        // setId("#test");
     }
 
     const SetEquation = (event:React.ChangeEvent<HTMLInputElement>)=>{
@@ -245,19 +254,19 @@ function Bisection() {
             <Chart data={newData}/>
           </Grid.Col>
         </Grid>
-        </Group>
-        <EquationChart dataX={valueX} Equation={UserInput.Equation} RegX={UserInput.starter}/>
+      </Group>
+      <EquationChart Equation={PropsEquation} RegX={UserInput.starter} Ans={UserInput.X}/>
       {Status && <TableOutput 
         data={newData} 
         label={label}
       />}
       <Transition mounted={InValid} transition="slide-up" duration={1000} timingFunction='ease'>
         {(styles)=><Dialog opened={InValid} withBorder={false} style={{...styles,padding:0}}>
-            <Alert color='red' ref={clickOutside} icon={<IconAlertTriangle strokeWidth={2.5}/>} variant='filled' title="Invalid Input!!">
-              Please check your input XL or XR
-            </Alert>
-          </Dialog>}
-        </Transition>
+          <Alert color='red' ref={clickOutside} icon={<IconAlertTriangle strokeWidth={2.5}/>} variant='filled' title="Invalid Input!!">
+            Please check your input XL or XR
+          </Alert>
+        </Dialog>}
+      </Transition>
     </>
   )
 }

@@ -6,6 +6,7 @@ import Header from '../components/Header';
 import Chart from '../components/Chart';
 import { useClickOutside } from '@mantine/hooks';
 import { IconAlertTriangle } from '@tabler/icons-react';
+import EquationChart from '../components/EquationChart';
 import {
   Group,
   Grid,
@@ -77,7 +78,7 @@ function Falsepos() {
             fXl = evaluate(UserInput.Equation,{[Scope]:xl})
             fXr = evaluate(UserInput.Equation, {[Scope]:xr})
             let check:number = fXl*fXr;
-            if(check > 0){
+            if(check > 0 || xl > xr){
               setInValid(true)
               setStatus(false)
               setUserInput((prevState)=>{
@@ -237,17 +238,18 @@ function Falsepos() {
                 </Grid.Col>
               </Grid>
             </Group>
+            {Status && <EquationChart Equation={UserInput.Equation} RegX={UserInput.starter} Ans={UserInput.X}/>}
             {Status &&<TableOutput
                 data={newData} 
                 label={label}
             />}
             
             <Transition mounted={InValid} transition="slide-up" duration={1000} timingFunction='ease'>
-                  {(styles)=><Dialog opened={InValid} withBorder={false} style={{...styles,padding:0}}>
-                    <Alert color='red' ref={clickOutside} icon={<IconAlertTriangle strokeWidth={2.5}/>} variant='filled' title="Invalid Input!!">
-                      Please check your input XL or XR
-                    </Alert>
-                </Dialog>}
+              {(styles)=><Dialog opened={InValid} withBorder={false} style={{...styles,padding:0}}>
+                <Alert color='red' ref={clickOutside} icon={<IconAlertTriangle strokeWidth={2.5}/>} variant='filled' title="Invalid Input!!">
+                  Please check your input XL or XR
+                </Alert>
+              </Dialog>}
             </Transition>
         </>
     )

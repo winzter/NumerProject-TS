@@ -57,7 +57,7 @@ function Newton() {
         let iter=0;
         const MAX = 50;
 
-        do{
+        do{ 
             fx = evaluate(UserInput.Equation,{[Scope]:x});
             fxp = derivative(UserInput.Equation,`${[Scope]}`).evaluate({[Scope]:x});
             console.log(fxp);
@@ -80,7 +80,7 @@ function Newton() {
         let test:RegExp = /[a-zA-Z]/i;
         let Alphabet:RegExpMatchArray | null= Eq.match(test)
         if(Alphabet){
-        return Alphabet[0];
+            return Alphabet[0];
         }
     })
 
