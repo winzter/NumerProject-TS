@@ -41,10 +41,15 @@ function EquationChart({Equation,RegX,Ans}:chartData) {
     const CalculateXY = ()=>{
         let dataX = Array.from({length:20},(_,i)=>(i+1)*(-1));
         dataX.sort((a,b)=>b-a).reverse()
+        console.log(dataX);
+        
         
         let dataX2 = Array.from({length:21},(_,i)=>i)
         dataX2.sort((a,b)=>a-b) 
+        console.log(dataX2);
         let allDataX = [...dataX,...dataX2]
+        console.log(allDataX);
+        
         
         let dataY = allDataX.map((e)=>evaluate(Equation,{[RegX]:e}))
         dataCal = dataY.map((element,index)=>{
@@ -72,7 +77,7 @@ function EquationChart({Equation,RegX,Ans}:chartData) {
 
     useEffect(()=>{
       CalculateXY()
-    },[])
+    },[Equation])
 
 
   return (

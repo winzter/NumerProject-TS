@@ -39,11 +39,13 @@ function Chart({data}:Props) {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="iteration"/>
-            {data.length !== 1 ? <YAxis scale="log" domain={['auto', 'auto']} />:<YAxis/>}
+            {data.length > 1 ? <YAxis scale="log" domain={['auto', 'auto']} />:<YAxis/>}
             <Tooltip />
             <Legend />
-            <Line type="monotone" strokeWidth={2} dataKey="Err" stroke={`#${Math.floor(Math.random()*16777215).toString(16)}`}  />
-            <Line type="monotone" strokeWidth={2} dataKey="Xm" stroke={`#${Math.floor(Math.random()*16777215).toString(16)}`} />
+            {/* <Line type="monotone" strokeWidth={2} dataKey="Err" stroke={`#${Math.floor(Math.random()*16777215).toString(16)}`}  /> */}
+            <Line type="monotone" strokeWidth={2} dataKey="Err" stroke={`#8884d8`}  />
+            {/* <Line type="monotone" strokeWidth={2} dataKey="Xm" stroke={`#${Math.floor(Math.random()*16777215).toString(16)}`} /> */}
+            <Line type="monotone" strokeWidth={2} dataKey="Xm" stroke={`#82ca9d`} />
           </LineChart>
         </div>
       </Card>
