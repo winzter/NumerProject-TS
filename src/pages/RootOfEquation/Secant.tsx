@@ -1,9 +1,10 @@
 import React , { useState } from 'react'
-import InputForm from '../components/InputForm';
-import Header from '../components/Header';
-import TableOutput from '../components/TableOutput';
+import InputForm from '../../components/InputForm';
+import Header from '../../components/Header';
+import TableOutput from '../../components/TableOutput';
 import { evaluate } from 'mathjs'
-import Chart from '../components/Chart';
+import Chart from '../../components/Chart';
+import EquationChart from '../../components/EquationChart';
 import { Grid, Group } from '@mantine/core';
 
 interface SecantObject{
@@ -38,7 +39,7 @@ function Secant() {
         starter:"x"
     })
     const [starter,setStarter] = useState<string>("x");
-    // const [Equ,setEqu] = useState([]);
+    const [PropsEquation,setPropsEquation] = useState("(x^2)-7")
     const [newData,setNewData] = useState<SecantObject[]>([]);
     const [Status,setStatus] = useState<boolean>(false);
     const [Ans,setAns] = useState(0);
@@ -55,14 +56,14 @@ function Secant() {
         Xr:`${starter.toUpperCase()}2`,
         Err:"Error"
     }
-    // const [id,setId] = useState("#t")
+    
 
     const error = (xold:number,xnew:number)=>{
         return Math.abs((xnew-xold)/xnew)*100
     }
 
     const calSecant = (x0:number,x1:number,Scope:string)=>{
-        // setStatus(true) 
+       
         let fx,fxold,x2=0,ea;
         let iter=1;
         const MAX = 50;
@@ -101,12 +102,9 @@ function Secant() {
         const Scope:any= Regex(UserInput.Equation);
         setStarter(Scope)
         calSecant(UserInput.X0,UserInput.X1,Scope);
-        // let fx = [{fn:`${Equation?Equation:0}`}]
-        // setShowTable(print(Scope));
         setNewData(data)
         setStatus(true);
-        // setId("#test");
-        // setEqu(fx);
+        setPropsEquation(UserInput.Equation)
         console.log(data);
     }
 
@@ -184,7 +182,7 @@ function Secant() {
             </Grid>
         </Group>
         
-        
+        {Status && <EquationChart Equation={PropsEquation} RegX={UserInput.starter} Ans={Ans}/>}
         {Status && <TableOutput
             data={newData}
             label={label}

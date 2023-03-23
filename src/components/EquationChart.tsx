@@ -7,6 +7,7 @@ import {
     XAxis,
     YAxis,
     CartesianGrid,
+    LabelList,
     LineChart,
     ReferenceDot,
     Tooltip,
@@ -36,7 +37,9 @@ function EquationChart({Equation,RegX,Ans}:chartData) {
     const [minY,setMinY] = useState(0);
     const [Answer,setAnswer] = useState<XY[]>([])
     let dataCal:XY[] = [];
+    console.log(Ans);
     Ans = Number(Ans.toFixed(6))
+    
     
     const CalculateXY = ()=>{
         let dataX = Array.from({length:20},(_,i)=>(i+1)*(-1));
@@ -68,12 +71,21 @@ function EquationChart({Equation,RegX,Ans}:chartData) {
          setAnswer(RefDot.map((e,index)=>{
           return{
             x:AnsData[index],
-            y:e.toFixed()
+            y:Number(e.toFixed())
           }
         }).filter((e)=>e.y == 0))
-        console.log(Equation);
+        // console.log(Equation);
       }
 
+      // const Custom =(props:any)=>{
+      //   const { cx, cy } = props;
+
+      //   return (
+      //     <>
+      //       <circle cx={cx - 10} cy={cy - 10} r={5} fill="red" />
+      //       </>
+      //   );
+      // }
 
     useEffect(()=>{
       CalculateXY()
@@ -85,7 +97,7 @@ function EquationChart({Equation,RegX,Ans}:chartData) {
       <Card shadow="md" p="sm" radius="md" withBorder>
         <div>
           <ScatterChart
-            width={1000}
+            width={800}
             height={500}
             margin={{
               top: 20,
@@ -143,10 +155,12 @@ function EquationChart({Equation,RegX,Ans}:chartData) {
               )}
             
             <Tooltip cursor={{ strokeDasharray: '3 3' }} />
-            <Scatter  data={dataPoint} fill="black" line name='Equation'/>
-            <Scatter  data={Answer} fill="red"/>
+            <Scatter  data={dataPoint} fill="black" line name='Equation' r={2.5}/>
+            <Scatter name="A school" data={Answer} fill="red" r={2.5}>
+              <LabelList dataKey="x" position="top" offset={10}/>
+            </Scatter>
           </ScatterChart>
-          {/* <LineChart
+          {/* <ComposedChart
             data={dataCal}
             width={1000}
             height={500}
@@ -203,25 +217,28 @@ function EquationChart({Equation,RegX,Ans}:chartData) {
                 strokeOpacity={0.65}
                 />
             )}
-            <Tooltip/>
+            <Tooltip labelStyle={{color:"red"}}  />
              <Line
                 strokeWidth={0}
                 data={dataPoint}
                 type="monotone"
                 dataKey="x"
-                dot={false}
+                // dot={false}
                 stroke="black"
                 name='X'
             />
+            
             <Line
+                dot={<Custom/>}
                 strokeWidth={2}
                 data={dataPoint}
+                r={2.5}
                 type="monotone"
                 dataKey="y"
                 stroke="black"
                 name='Y'
             />
-          </LineChart> */}
+          </ComposedChart> */}
         </div>
       </Card>
     </Group>

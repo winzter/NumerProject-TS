@@ -1,10 +1,11 @@
 import React , { useState } from 'react'
-import InputForm from '../components/InputForm';
+import InputForm from '../../components/InputForm';
 import { evaluate , derivative } from 'mathjs'
-import Header from '../components/Header';
-import TableOutput from '../components/TableOutput';
-import Chart from '../components/Chart';
+import Header from '../../components/Header';
+import TableOutput from '../../components/TableOutput';
+import Chart from '../../components/Chart';
 import { Grid, Group } from '@mantine/core';
+import EquationChart from '../../components/EquationChart';
 
 interface NewtonObject{
     iteration:number,
@@ -32,7 +33,7 @@ function Newton() {
         starter:"x"
     })
     const [newData,setNewData] = useState<NewtonObject[]>([]);
-    // const [Equ,setEqu] = useState([]);
+    const [PropsEquation,setPropsEquation] = useState("(x^2)-7")
     const [Status,setStatus] = useState(false);
     const [Ans,setAns] = useState<number>(0);
 
@@ -89,16 +90,13 @@ function Newton() {
         
         const Scope:any = Regex(UserInput.Equation)
         calNewton(UserInput.X,Scope);
-        // setShowTable(print(Scope));
         setUserInput((prevState)=>{
             return{
                 ...prevState,
                 starter:Scope
             }
         })
-        // setId("#test")
-        // let fx = [{fn:`${Equation?Equation:0}`}]
-        // setEqu(fx);
+        setPropsEquation(UserInput.Equation)
         setNewData(data)
         setStatus(true) 
         console.log(data);
@@ -166,7 +164,7 @@ function Newton() {
 
             </Grid>
         </Group>
-            
+        {Status && <EquationChart Equation={PropsEquation} RegX={UserInput.starter} Ans={Ans}/>}
         {Status && <TableOutput
             data={newData}
             label={label}

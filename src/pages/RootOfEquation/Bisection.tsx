@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { evaluate } from 'mathjs';
-import InputForm from '../components/InputForm';
-import TableOutput from '../components/TableOutput';
-import Header from '../components/Header';
-import Chart from '../components/Chart';
+import InputForm from '../../components/InputForm';
+import TableOutput from '../../components/TableOutput';
+import Header from '../../components/Header';
+import Chart from '../../components/Chart';
 import { useClickOutside } from '@mantine/hooks';
 import { IconAlertTriangle } from '@tabler/icons-react';
 import {
@@ -13,7 +13,7 @@ import {
   Alert,
   Dialog
 } from '@mantine/core';
-import EquationChart from '../components/EquationChart';
+import EquationChart from '../../components/EquationChart';
 
 interface BisectionObject {
   iteration: number;
@@ -255,7 +255,7 @@ function Bisection() {
           </Grid.Col>
         </Grid>
       </Group>
-      <EquationChart Equation={PropsEquation} RegX={UserInput.starter} Ans={UserInput.X}/>
+      {Status && <EquationChart Equation={PropsEquation} RegX={UserInput.starter} Ans={UserInput.X}/>}
       {Status && <TableOutput 
         data={newData} 
         label={label}

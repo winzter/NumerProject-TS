@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import {Link} from 'react-router-dom';
 
 export const NavbarContainer = styled.nav`
-  font-family: 'Public Sans',sans-serif;
+  font-family: 'Kanit', sans-serif;
   position: relative;
   width: 100%;
   height: 70px;

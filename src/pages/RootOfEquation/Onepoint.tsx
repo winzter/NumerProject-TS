@@ -1,10 +1,11 @@
 import React , { useState } from 'react'
 import { evaluate } from 'mathjs'
-import Header from '../components/Header';
-import InputForm from '../components/InputForm';
-import TableOutput from '../components/TableOutput';
-import Chart from '../components/Chart';
+import Header from '../../components/Header';
+import InputForm from '../../components/InputForm';
+import TableOutput from '../../components/TableOutput';
+import Chart from '../../components/Chart';
 import { Grid, Group } from '@mantine/core';
+import EquationChart from '../../components/EquationChart';
 
 interface OnepointObject{
     iteration:number,
@@ -38,9 +39,8 @@ function Onepoint() {
     const [starter,setStrter] = useState<string>("x");
     const [Ans,setAns] = useState<number>(0);
     const [newData,setNewData] = useState<OnepointObject[]>([]);
-    // const [Equ,setEqu] = useState([]);
+    const [PropsEquation,setPropsEquation] = useState("2x-1")
     const [Status,setStatus] = useState<boolean>(false);
-    // const [id,setId] = useState<string>("#t")
 
     const labelForm: LabelFormOnePoint = {
         labelFX:`Input f(${starter})`,
@@ -67,7 +67,7 @@ function Onepoint() {
                 Err:ea,
                 ErrNotDecimal:Math.round(ea)
             })
-        }while(ea>UserInput.Error && iter<MAX)
+        }while(ea > UserInput.Error && iter < MAX)
         setAns(xnew)
     }
 
@@ -87,20 +87,12 @@ function Onepoint() {
         e.preventDefault()
         const Scope:any = Regex(UserInput.EquationGX)
         calOnePoint(UserInput.X,Scope);
-        // let fx = [
-        //     {
-        //         fn:`${equationFx?equationFx:0}`
-        //     },
-        //     {
-        //         fn:`${equationGx?equationGx:0}`
-        //     }
-        //   ]
-        // setEqu(fx);
+        setPropsEquation(UserInput.EquationFX)
         setNewData(data)
         setStrter(Scope)
-        // setId("#test")
         setStatus(true)   
     }
+
     const SetEquationFx = (event:React.ChangeEvent<HTMLInputElement>)=>{
         console.log(event.target.value);
         setUserInput((prevState)=>{
@@ -175,6 +167,7 @@ function Onepoint() {
                 </Grid.Col>
             </Grid>
         </Group>
+        {Status && <EquationChart Equation={PropsEquation} RegX={UserInput.starter} Ans={Ans}/>}
        {Status && <TableOutput
             data={newData}
             label={label}

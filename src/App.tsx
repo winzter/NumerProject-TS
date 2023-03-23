@@ -2,12 +2,13 @@ import React from 'react';
 import { Routes , Route} from 'react-router-dom'
 import Home from './pages/Home';
 import NavBar from './components/NavBar'
-import Bisection from './RootOfEquation/Bisection';
+import Bisection from './pages/RootOfEquation/Bisection';
 import './App.css';
-import Falsepos from './RootOfEquation/Falsepos';
-import Onepoint from './RootOfEquation/Onepoint';
-import Newton from './RootOfEquation/Newton';
-import Secant from './RootOfEquation/Secant';
+import Falsepos from './pages/RootOfEquation/Falsepos';
+import Onepoint from './pages/RootOfEquation/Onepoint';
+import Newton from './pages/RootOfEquation/Newton';
+import Secant from './pages/RootOfEquation/Secant';
+import Cramer from './pages/Linear Agebra/Cramer';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
         <Route path="/onepoint" element={<Onepoint/>}/>
         <Route path="/newtonraphson" element={<Newton/>}/>
         <Route path="/secantmethod" element={<Secant/>}/>
+        <Route path="/cramer" element={<Cramer/>}/>
       </Routes>
     </>
   );

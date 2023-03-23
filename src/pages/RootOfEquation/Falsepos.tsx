@@ -1,12 +1,12 @@
 import React , { useState }from 'react';
-import InputForm from '../components/InputForm';
-import TableOutput from '../components/TableOutput';
+import InputForm from '../../components/InputForm';
+import TableOutput from '../../components/TableOutput';
 import { evaluate } from 'mathjs'
-import Header from '../components/Header';
-import Chart from '../components/Chart';
+import Header from '../../components/Header';
+import Chart from '../../components/Chart';
 import { useClickOutside } from '@mantine/hooks';
 import { IconAlertTriangle } from '@tabler/icons-react';
-import EquationChart from '../components/EquationChart';
+import EquationChart from '../../components/EquationChart';
 import {
   Group,
   Grid,
@@ -41,6 +41,7 @@ function Falsepos() {
 
     const data:FalsePostionObject[] =[];
     const clickOutside = useClickOutside(()=>{setInValid(false)})
+    const [PropsEquation,setPropsEquation] = useState("(x^4)-13")
     const [InValid,setInValid] = useState<boolean>(false)
     const [UserInput,setUserInput] = useState({
       Equation:"(x^4)-13",
@@ -51,7 +52,6 @@ function Falsepos() {
       starter:"x"
     })
     const [newData,setNewData] = useState<FalsePostionObject[]>([]);
-    // const [Equ,setEqu] = useState<any[]>([]);
     const [Status,setStatus] = useState<boolean>(false);
    
 
@@ -151,6 +151,7 @@ function Falsepos() {
             // let fx = [{fn:`${Equation?Equation:0}`}]
             const Scope:any= Regex(UserInput.Equation);
             Calfalsepos(xlnum,xrnum,Scope);
+            setPropsEquation(UserInput.Equation)
             setUserInput((prevState)=>{
               return{
                 ...prevState,
@@ -158,10 +159,6 @@ function Falsepos() {
               }
             })
             setNewData(data);
-            // setEqu(fx);
-             
-            // setHtml(print(Scope));
-            // setId("#test");
         }
 
         const SetEquation = (event:React.ChangeEvent<HTMLInputElement>)=>{
@@ -238,7 +235,7 @@ function Falsepos() {
                 </Grid.Col>
               </Grid>
             </Group>
-            {Status && <EquationChart Equation={UserInput.Equation} RegX={UserInput.starter} Ans={UserInput.X}/>}
+            {Status && <EquationChart Equation={PropsEquation} RegX={UserInput.starter} Ans={UserInput.X}/>}
             {Status &&<TableOutput
                 data={newData} 
                 label={label}
