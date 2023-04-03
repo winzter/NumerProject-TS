@@ -1,32 +1,56 @@
 import React , { useState } from 'react'
-import { NumberInput , Group , Button, Grid , Container , NativeSelect} from '@mantine/core'
+import { Group , Button , Container , NativeSelect} from '@mantine/core'
 import { IconChevronDown } from '@tabler/icons-react';
+import { det } from 'mathjs'
 import CreateMatrix from '../../components/CreateMatrix';
 import Header from '../../components/Header'
 
 function Cramer() {
-    const [NumberMatrix,setNumberMatrix] = useState(2)
+    const [NumberMatrix,setNumberMatrix] = useState<number>(2)
     const [Matrix,setMatrix] = useState<number[][]>(
         Array(Number(NumberMatrix))
         .fill(0)
         .map(() => Array(Number(NumberMatrix)).fill(0))
     )
-    const [ValueMatrix,setValueMatrix] = useState<[]>([])
+    const [ValueMatrix,setValueMatrix] = useState<number[]>(
+        Array(Number(NumberMatrix)).fill(0)
+    )
+    const [Answer,setAnswer] = useState<number[]>([])
 
-
-    const setValueOfMatrix = (value:number|undefined,i:number,j:number)=>{
+    const setValueOfMatrix = (value:number,i:number,j:number)=>{
         if(value !== undefined){
-            const matrix:any = [...Matrix]
+            const matrix:number[][] = [...Matrix]
             matrix[i][j] = value
             console.log(matrix);
-            setMatrix(matrix)
+            setMatrix(matrix)          
         }
-       
+        //console.log(Matrix);
+    }
+    
+    const setAnsOfMatrix = (ans:number,i:number)=>{
+        if(ans !== undefined){
+            const matrix:number[] = [...ValueMatrix]
+            matrix[i] = ans
+            // console.log(matrix);
+            setValueMatrix(matrix)
+        }
     }
 
     const CalCramer = (e:React.FormEvent<HTMLFormElement>)=>{
         e.preventDefault()
-        console.log(e.currentTarget);
+        console.log(Matrix);
+        console.log(ValueMatrix);
+        
+        let k=0 , mC:number[][],x:number[] = Array(NumberMatrix).fill(0),mB:number[] = [...ValueMatrix],mA:number[][] = [...Matrix]
+        for(let j=0;j<NumberMatrix;j++){
+            mC = mA.map(row => [...row])
+            for(let i=0;i<NumberMatrix;i++){
+                mC[i][k] = mB[i];
+            }
+            x[k] = det(mC)/det(mA);
+            console.log(`X${k+1} = ${x[k]}`);
+            k++;
+        }
     }
 
   return (
@@ -48,6 +72,7 @@ function Cramer() {
                                 Array(Number(event.currentTarget.value)).fill(0)
                             )
                         )
+                        setValueMatrix(Array(Number(event.currentTarget.value)).fill(0))
                         setNumberMatrix(Number(event.currentTarget.value))
                         }
                     }
@@ -55,14 +80,16 @@ function Cramer() {
                 <CreateMatrix 
                     Dimension={NumberMatrix} 
                     setValueOfMatrix={setValueOfMatrix}
-                    Matrix={Matrix}
+                    setAnsOfMatrix={setAnsOfMatrix}
+                    MatrixData={Matrix}
+                    AnsData={ValueMatrix}
                 />
                 <Group position='center' mb="md">
                     <Button 
                         mt="md" 
                         size='sm' 
                         type='submit' 
-                        variant="gradient" 
+                        variant="gradient"
                         gradient={{ from: 'pink', to: 'orange', deg:60 }}>
                             Calculate
                     </Button>
