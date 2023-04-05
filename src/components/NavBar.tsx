@@ -36,6 +36,12 @@ function NavBar() {
               < NavbarLink to="/cramer">Cramer</NavbarLink>
             </DropdownContent>
           </DropdownContainer>
+          <DropdownContainer>
+            <Dropbtn>Least Square Regression</Dropbtn>
+            <DropdownContent>
+              < NavbarLink to="#">Linear Regression</NavbarLink>
+            </DropdownContent>
+          </DropdownContainer>
         </RightContainer>
       </InnerContainer>
     </NavbarContainer>

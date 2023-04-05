@@ -1,5 +1,7 @@
-import React , { JSXElementConstructor, useState } from 'react'
-import { Group , Button , Container } from '@mantine/core'
+import React , { useState } from 'react'
+import { Group , Button , Container , Transition , Alert, Dialog , Grid , Card , Title} from '@mantine/core'
+import { useClickOutside } from '@mantine/hooks';
+import { IconAlertTriangle } from '@tabler/icons-react';
 import { det } from 'mathjs'
 import InputMatrix from '../../components/InputMatrix';
 import CreateMatrix from '../../components/CreateMatrix';
@@ -7,6 +9,9 @@ import Header from '../../components/Header'
 
 function Cramer() {
     const [NumberMatrix,setNumberMatrix] = useState<number>(2)
+    const [InValid,setInValid] = useState<boolean>(false)
+    const [status,setStatus] = useState<boolean>(false)
+    const clickOutside = useClickOutside(()=>{setInValid(false)})
     const [Matrix,setMatrix] = useState<number[][]>(
         Array(Number(NumberMatrix))
         .fill(0)
@@ -14,11 +19,11 @@ function Cramer() {
     )
     const [ValueMatrix,setValueMatrix] = useState<number[]>(
         Array(Number(NumberMatrix)).fill(0)
-    )
-    const [Answer,setAnswer] = useState<number[]>(
-        Array(NumberMatrix).fill(0)
-    )
-    
+    )   
+
+    const [AnsMatrix,setAnsMatrix] = useState<number[]>(
+        Array(Number(NumberMatrix)).fill(0)
+    )  
 
     const setValueOfMatrix = (value:number,i:number,j:number)=>{
         if(value !== undefined){
@@ -39,17 +44,23 @@ function Cramer() {
         }
     }
 
-    const showAns = ()=>{
+    const showAnswer = ()=>{
         let ans:React.ReactNode[] = []
         for(let i=0;i<NumberMatrix;i++){
             ans.push(
-                <h2 key={i}>Y{i} = {Answer[i]}</h2>
+                <Grid.Col span='content'>
+                    <h3 key={i}>Y{i} = {AnsMatrix[i]}</h3>
+                </Grid.Col>
             )
         }
         return(
-            <div>
-                <h1>asdasdasd</h1>
-            </div>
+            <Group position='center'>
+                <Title order={3}>Answer</Title>
+                <Grid columns={NumberMatrix*2}>
+                    {ans}
+                </Grid>
+                
+            </Group>
         )
     }
 
@@ -80,8 +91,11 @@ function Cramer() {
         DetA:number = det(mA)
         if(DetA === 0){
             console.log("Can't divide by zero!");
+            setInValid(true)
+            setStatus(false)
         }
         else{
+            setStatus(true)
             for(let j=0;j<NumberMatrix;j++){
                 mC = mA.map(row => [...row])
                 for(let i=0;i<NumberMatrix;i++){
@@ -92,49 +106,54 @@ function Cramer() {
                 console.log(`Y${k} = ${x[k]}`);
                 k++;
             }
-            console.log(ans);
-            setAnswer(ans)
+            // console.log(ans);
+            setAnsMatrix(ans)
         } 
     }
-    
 
   return (
     <>
         <Header text="Cramer"/>
-        {/* <Group position="center">
-        <Grid justify='center'>
-            <Grid.Col span="content">*/}
-                {/* <Card withBorder radius='md' p='xs' shadow='md'>  */}
-                    <Container size={550} px="md">
-                        <form onSubmit={CalCramer}>
-                            <InputMatrix
-                                setMarixState={setMatrixState}
-                            />
-                            <CreateMatrix 
-                                Dimension={NumberMatrix} 
-                                setValueOfMatrix={setValueOfMatrix}
-                                setAnsOfMatrix={setAnsOfMatrix}
-                                MatrixData={Matrix}
-                                AnsData={ValueMatrix}
-                            />
-                            <Group position='center' mb="md">
-                                <Button 
-                                    mt="md" 
-                                    size='sm' 
-                                    type='submit' 
-                                    variant="gradient"
-                                    gradient={{ from: 'pink', to: 'orange', deg:60 }}>
-                                        Calculate
-                                </Button>
-                            </Group>
-                        </form>
-                        
-                    </Container>
-                    {/* {showAns} */}
-                 {/* </Card> */}
-            {/*</Grid.Col>
-        </Grid>
-        </Group> */}
+        <Group position="center">
+            <Grid justify='center'>
+                <Grid.Col span="content">
+                    <Card withBorder radius='md' p='xs' shadow='md'> 
+                        <Container size={550} px="md">
+                            <form onSubmit={CalCramer}>
+                                <InputMatrix
+                                    setMarixState={setMatrixState}
+                                />
+                                <CreateMatrix 
+                                    Dimension={NumberMatrix} 
+                                    setValueOfMatrix={setValueOfMatrix}
+                                    setAnsOfMatrix={setAnsOfMatrix}
+                                    MatrixData={Matrix}
+                                    AnsData={ValueMatrix}
+                                />
+                                <Group position='center' mb="md">
+                                    <Button 
+                                        mt="md" 
+                                        size='sm' 
+                                        type='submit' 
+                                        variant="gradient"
+                                        gradient={{ from: 'pink', to: 'orange', deg:60 }}>
+                                            Calculate
+                                    </Button>
+                                </Group>
+                            </form>
+                        </Container>
+                    </Card>
+                </Grid.Col>
+            </Grid>
+        </Group>
+        { status && <>{showAnswer()}</> }
+        <Transition mounted={InValid} transition="slide-up" duration={1000} timingFunction='ease'>
+            {(styles)=><Dialog opened={InValid} withBorder={false} style={{...styles,padding:0}}>
+            <Alert color='red' ref={clickOutside} icon={<IconAlertTriangle strokeWidth={2.5}/>} variant='filled' title="Divided by zero!!">
+                Can't divide by zero!
+            </Alert>
+            </Dialog>}
+        </Transition>
     </>
   )
 }

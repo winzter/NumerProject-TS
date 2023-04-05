@@ -35,7 +35,7 @@ function Secant() {
         Equation:"(x^2)-7",
         X0:0,
         X1:0,
-        Error:0,
+        Error:0.000001,
         starter:"x"
     })
     const [starter,setStarter] = useState<string>("x");
