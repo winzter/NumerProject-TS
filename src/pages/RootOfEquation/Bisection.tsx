@@ -1,10 +1,9 @@
-import React, { useState , useEffect } from 'react';
+import React, { useState } from 'react';
 import { evaluate } from 'mathjs';
 import InputForm from '../../components/InputForm';
 import TableOutput from '../../components/TableOutput';
 import Header from '../../components/Header';
 import Chart from '../../components/Chart';
-import axios from 'axios'
 import { useClickOutside } from '@mantine/hooks';
 import { IconAlertTriangle } from '@tabler/icons-react';
 import {
@@ -12,8 +11,7 @@ import {
   Grid,
   Transition,
   Alert,
-  Dialog,
-  Select
+  Dialog
 } from '@mantine/core';
 import EquationChart from '../../components/EquationChart';
 
@@ -45,8 +43,6 @@ interface X{
 
 function Bisection() {
 
-    const [apiData,setApiData] = useState([])
-
     const [newData, setNewData] = useState<BisectionObject[]>([]);
     const [InValid,setInValid] = useState<boolean>(false)
     const clickOutside = useClickOutside(()=>{setInValid(false)})
@@ -59,13 +55,6 @@ function Bisection() {
       Error:0.000001,
       starter:"x"
     })
-
-    useEffect(()=>{
-      axios.get("http://localhost:5000/").then((res)=>{
-        console.log(res.data);
-        setApiData(res.data)
-      })
-    },[])
  
     const [Status, setStatus] = useState<boolean>(false);
 
@@ -179,6 +168,8 @@ function Bisection() {
     
     const calculateRoot = (e: React.FormEvent<HTMLFormElement>) =>{
         e.preventDefault();
+        console.log(UserInput);
+        
         const xlnum: number = UserInput.XL;
         const xrnum: number = UserInput.XR;
         const Scope:any = Regex(UserInput.Equation);
@@ -223,6 +214,20 @@ function Bisection() {
       })
     }
 
+    const SetExampleData = (data:any[])=>{
+      if(data[0]){setUserInput((prevState)=>{
+        console.log(data[0]);
+        
+        return{
+          ...prevState,
+          Equation:data[0].label,
+          X:0,
+          XL:Number(data[0].xl),
+          XR:Number(data[0].xr)
+        }
+      })}
+    }
+
     const SetERROR = (event:number)=>{
       setUserInput((prevState)=>{
         return{
@@ -248,33 +253,6 @@ function Bisection() {
       <Group position="center">
         <Grid justify='center'>
           <Grid.Col span="content">
-            <Select
-              searchable
-              onSearchChange={(e)=>{
-                console.log(e);
-                //let parse = JSON.parse(e)
-                setUserInput((prevState)=>{
-                  return{
-                    ...prevState,
-                    Equation:e
-                    //XL:Number(parse.xl)
-                  }
-                })
-              }}
-              onChange={(e:any)=>{
-                console.log(JSON.parse(e));
-                let a = JSON.parse(e)
-                setUserInput((prevState)=>{
-                  return{
-                    ...prevState,
-                    Equation:e.label,
-                    XL:Number(a.xl),
-                    XR:Number(a.xr)
-                  }
-                })
-              }}
-              data={apiData}
-            />
             <InputForm 
               starter={SetStarter}
               calculateRoot={calculateRoot} 
@@ -288,6 +266,7 @@ function Bisection() {
               setXL={SetXL}
               setXR={SetXR}
               setERROR={SetERROR}
+              setExampleData={SetExampleData}
             />
           </Grid.Col>
           <Grid.Col span="content">

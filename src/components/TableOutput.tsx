@@ -54,8 +54,8 @@ function TableOutput({data,label}:TableData) {
                   <tr key={index}>
                     <td>{element.iteration}</td>
                     {typeof element.Xl !== 'undefined' && <td>{element.Xl}</td>}
-                    <td>{element.Xm}</td>
-                    {element.Xr && <td>{element.Xr}</td>}
+                    {typeof element.Xm !== 'undefined' && <td>{element.Xm}</td>}
+                    {typeof element.Xr !== 'undefined' && <td>{element.Xr}</td>}
                     <td>{element.Err}</td>
                   </tr>
                 );

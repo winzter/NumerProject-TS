@@ -62,6 +62,11 @@ function Newton() {
             fx = evaluate(UserInput.Equation,{[Scope]:x});
             fxp = derivative(UserInput.Equation,`${[Scope]}`).evaluate({[Scope]:x});
             console.log(fxp);
+            if(fxp === 0){
+                console.log("Error can't divide by zero");
+                
+                break
+            }
             xnew = x - (fx/fxp);
             ea = error(x,xnew);
             x = xnew;
@@ -140,6 +145,17 @@ function Newton() {
             }
         })
       }
+
+      const SetExampleData = (data:any[])=>{
+        if(data[0]){setUserInput((prevState)=>{
+          console.log(data[0]);
+          return{
+            ...prevState,
+            Equation:data[0].label,
+            X:Number(data[0].xl),
+          }
+        })}
+      }
   return (
     <> 
         <Header text="Newton Raphson Method"/>
@@ -153,9 +169,11 @@ function Newton() {
                         form={labelForm}
                         starter={SetStarter}
                         setXL={SetX}
+                        valXl={UserInput.X}
                         setEquationFx={SetEquation}
                         setERROR={SetERROR}
                         calculateRoot={calculateRoot}
+                        setExampleData={SetExampleData}
                     />
                 </Grid.Col>
                 <Grid.Col span="content">

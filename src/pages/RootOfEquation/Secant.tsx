@@ -38,22 +38,22 @@ function Secant() {
         Error:0.000001,
         starter:"x"
     })
-    const [starter,setStarter] = useState<string>("x");
+    //const [starter,setStarter] = useState<string>("x");
     const [PropsEquation,setPropsEquation] = useState("(x^2)-7")
     const [newData,setNewData] = useState<SecantObject[]>([]);
     const [Status,setStatus] = useState<boolean>(false);
     const [Ans,setAns] = useState(0);
 
     const labelForm: LabelForm = {
-        labelFX:`Input f(${starter})`,
-        labelXL:`Input ${starter.toUpperCase()}0`,
-        labelXR:`Input ${starter.toUpperCase()}1`
+        labelFX:`Input f(${UserInput.starter})`,
+        labelXL:`Input ${UserInput.starter.toUpperCase()}0`,
+        labelXR:`Input ${UserInput.starter.toUpperCase()}1`
     }
 
     const label: LabelFormSecant = {
-        Xl:`${starter.toUpperCase()}0`,
-        Xm:`${starter.toUpperCase()}1`,
-        Xr:`${starter.toUpperCase()}2`,
+        Xl:`${UserInput.starter.toUpperCase()}0`,
+        Xm:`${UserInput.starter.toUpperCase()}1`,
+        Xr:`${UserInput.starter.toUpperCase()}2`,
         Err:"Error"
     }
     
@@ -63,6 +63,7 @@ function Secant() {
     }
 
     const calSecant = (x0:number,x1:number,Scope:string)=>{
+       console.log(Scope);
        
         let fx,fxold,x2=0,ea;
         let iter=1;
@@ -71,6 +72,10 @@ function Secant() {
         do{
             fx = evaluate(UserInput.Equation,{[Scope]:x1});
             fxold = evaluate(UserInput.Equation,{[Scope]:x0});
+            if(fx-fxold === 0){
+                console.log("Can't divide by zero!");
+                break
+            }
             x2 = x1 - ((fx*(x1-x0)))/(fx-fxold);
             ea = error(x1,x2);
             data.push({
@@ -100,7 +105,14 @@ function Secant() {
     const calculateRoot = (e: React.FormEvent<HTMLFormElement>)=>{
         e.preventDefault()
         const Scope:any= Regex(UserInput.Equation);
-        setStarter(Scope)
+        console.log(Scope);
+        
+        setUserInput((prevState)=>{
+            return{
+              ...prevState,
+              starter:Scope
+            }
+          })
         calSecant(UserInput.X0,UserInput.X1,Scope);
         setNewData(data)
         setStatus(true);
@@ -157,6 +169,20 @@ function Secant() {
             }
         })
       }
+
+      const SetExampleData = (data:any[])=>{
+        if(data[0]){setUserInput((prevState)=>{
+          console.log(data[0]);
+          
+          return{
+            ...prevState,
+            Equation:data[0].label,
+            X:0,
+            X0:Number(data[0].xl),
+            X1:Number(data[0].xr)
+          }
+        })}
+      }
   return (
     <>
         <Header text="Secant Method"/>
@@ -169,11 +195,14 @@ function Secant() {
                         setEquationFx={SetEquation} 
                         valEquationFx={UserInput.Equation}
                         valX={Ans}
+                        valXl={UserInput.X0}
+                        valXr={UserInput.X1}
                         valError={UserInput.Error}
                         form={labelForm}
                         setXL={SetX0}
                         setXR={SetX1}
                         setERROR={SetERROR}
+                        setExampleData={SetExampleData}
                     />
                 </Grid.Col>
                 <Grid.Col span="content">

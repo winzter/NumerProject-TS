@@ -128,6 +128,18 @@ function Falsepos() {
                   }
                   data.push(obj)
                   xl = xnew;
+              }else{
+                ea = 0;
+                obj = {
+                  iteration: iter,
+                  Xl: xl,
+                  Xm: xnew,
+                  Xr: xr,
+                  Err: ea,
+                  ErrNotDecimal: Math.round(ea),
+                }
+                data.push(obj);
+                break
               }
               xold = xnew;
             }while(ea>UserInput.Error && iter<MAX)
@@ -152,7 +164,6 @@ function Falsepos() {
             e.preventDefault()
             const xlnum:number = UserInput.XL
             const xrnum:number = UserInput.XR
-            // let fx = [{fn:`${Equation?Equation:0}`}]
             const Scope:any= Regex(UserInput.Equation);
             Calfalsepos(xlnum,xrnum,Scope);
             setPropsEquation(UserInput.Equation)
@@ -204,6 +215,20 @@ function Falsepos() {
               }
             })
           }
+
+          const SetExampleData = (data:any[])=>{
+            if(data[0]){setUserInput((prevState)=>{
+              console.log(data[0]);
+              
+              return{
+                ...prevState,
+                Equation:data[0].label,
+                X:0,
+                XL:Number(data[0].xl),
+                XR:Number(data[0].xr)
+              }
+            })}
+          }
       
           const SetStarter = (event:React.ChangeEvent<HTMLInputElement>)=>{
             console.log(event.target.value);
@@ -227,11 +252,14 @@ function Falsepos() {
                       setEquationFx={SetEquation} 
                       valEquationFx={UserInput.Equation}
                       valX={UserInput.X}
+                      valXl={UserInput.XL}
+                      valXr={UserInput.XR}
                       valError={UserInput.Error}
                       form={labelForm}
                       setXL={SetXL}
                       setXR={SetXR}
                       setERROR={SetERROR}
+                      setExampleData={SetExampleData}
                   />
                 </Grid.Col>
                 <Grid.Col span="content">

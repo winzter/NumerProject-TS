@@ -142,6 +142,20 @@ function Onepoint() {
         })
     }
 
+    const SetExampleData = (data:any[])=>{
+        if(data[0]){setUserInput((prevState)=>{
+          console.log(data[0]);
+          
+          return{
+            ...prevState,
+            EquationGX:data[0].label,
+            X:0,
+            XL:Number(data[0].xl),
+            XR:Number(data[0].xr)
+          }
+        })}
+      }
+
   return (
     <>
         <Header text="Onepoint Iteration Method"/>
@@ -156,10 +170,13 @@ function Onepoint() {
                         valEquationGx={UserInput.EquationGX}
                         calculateRoot={calculateRoot}
                         setXL={SetX}
+                        valXl={UserInput.XL}
+                        valXr={UserInput.XR}
                         setERROR={SetERROR}
                         setEquationFx={SetEquationFx}
                         setEquationGx={SetEquationGx}
                         form={labelForm}
+                        setExampleData={SetExampleData}
                     />
                 </Grid.Col>
                 <Grid.Col span="content">

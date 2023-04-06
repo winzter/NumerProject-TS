@@ -37,21 +37,21 @@ function EquationChart({Equation,RegX,Ans}:chartData) {
     const [minY,setMinY] = useState(0);
     const [Answer,setAnswer] = useState<XY[]>([])
     let dataCal:XY[] = [];
-    console.log(Ans);
+    //console.log(Ans);
     Ans = Number(Ans.toFixed(6))
     
     
     const CalculateXY = ()=>{
         let dataX = Array.from({length:20},(_,i)=>(i+1)*(-1));
         dataX.sort((a,b)=>b-a).reverse()
-        console.log(dataX);
+        //console.log(dataX);
         
         
         let dataX2 = Array.from({length:21},(_,i)=>i)
         dataX2.sort((a,b)=>a-b) 
         console.log(dataX2);
         let allDataX = [...dataX,...dataX2]
-        console.log(allDataX);
+        //console.log(allDataX);
         
         
         let dataY = allDataX.map((e)=>evaluate(Equation,{[RegX]:e}))
@@ -76,16 +76,6 @@ function EquationChart({Equation,RegX,Ans}:chartData) {
         }).filter((e)=>e.y == 0))
         // console.log(Equation);
       }
-
-      // const Custom =(props:any)=>{
-      //   const { cx, cy } = props;
-
-      //   return (
-      //     <>
-      //       <circle cx={cx - 10} cy={cy - 10} r={5} fill="red" />
-      //       </>
-      //   );
-      // }
 
     useEffect(()=>{
       CalculateXY()

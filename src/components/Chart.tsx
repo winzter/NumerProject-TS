@@ -28,7 +28,7 @@ function Chart({data}:Props) {
         <div>
           <LineChart
             width={500}
-            height={390}
+            height={455}
             data={data}
             margin={{
               top: 5,
@@ -39,9 +39,7 @@ function Chart({data}:Props) {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="iteration"/>
-            {/* {data.length > 5 ? <YAxis scale="log" domain={['auto', 'auto']} />:<YAxis/>}
-             */}
-             <YAxis/>
+            {data.length > 5 ? <YAxis scale="log" domain={['auto', 'auto']} />:<YAxis/>}
             <YAxis/>
             <Tooltip />
             <Legend />
