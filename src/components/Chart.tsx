@@ -39,7 +39,9 @@ function Chart({data}:Props) {
           >
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="iteration"/>
-            {data.length > 5 ? <YAxis scale="log" domain={['auto', 'auto']} />:<YAxis/>}
+            {/* {data.length > 5 ? <YAxis scale="log" domain={['auto', 'auto']} />:<YAxis/>}
+             */}
+             <YAxis/>
             <YAxis/>
             <Tooltip />
             <Legend />

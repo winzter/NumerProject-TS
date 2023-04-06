@@ -1,14 +1,17 @@
 import React , { useState } from 'react'
-import { Group , Button , Container , Transition , Alert, Dialog , Grid , Card , Title} from '@mantine/core'
+import { Group , Button , Container , Transition , Alert, Dialog , Grid , Card , Title, NumberInput} from '@mantine/core'
 import { useClickOutside } from '@mantine/hooks';
 import { IconAlertTriangle } from '@tabler/icons-react';
-import { det } from 'mathjs'
+import { det , multiply } from 'mathjs'
 import InputMatrix from '../../components/InputMatrix';
 import CreateMatrix from '../../components/CreateMatrix';
 import Header from '../../components/Header'
 
 function Cramer() {
     const [NumberMatrix,setNumberMatrix] = useState<number>(2)
+    const [checkAns,setCheckAns] = useState( // Ans for checking
+        Array(Number(NumberMatrix)).fill(0) 
+    )
     const [InValid,setInValid] = useState<boolean>(false)
     const [status,setStatus] = useState<boolean>(false)
     const clickOutside = useClickOutside(()=>{setInValid(false)})
@@ -44,11 +47,49 @@ function Cramer() {
         }
     }
 
+    const showMethod = ()=>{
+        let dim:number = Number(NumberMatrix)
+        console.log(dim);
+        
+        let ansColumn = dim+2
+        let MatrixA:number[][] = [...Matrix]
+        let MatrixAns:number[] = [...AnsMatrix]
+        let MatrixB:number[] = [...ValueMatrix]
+        console.log(MatrixAns);
+        let inputAns:React.ReactNode[] = []
+        for(let i=0;i<dim;i++){
+            for(let j=0;j<dim;j++){
+                inputAns.push(
+                    <Grid.Col key={`${i}-${j}`} span={(ansColumn*2)/ansColumn}>
+                        <NumberInput value={MatrixA[i][j]} disabled/>
+                    </Grid.Col>
+                )
+            }
+            inputAns.push(
+                <Grid.Col key={`Ans${i}`} span={(ansColumn*2)/ansColumn}>
+                    <NumberInput value={MatrixAns[i]} disabled precision={10}/>
+                </Grid.Col>
+            )
+            inputAns.push(
+                <Grid.Col key={`B${i}`} span={(ansColumn*2)/ansColumn}>
+                    <NumberInput value={MatrixB[i]} disabled/>
+                </Grid.Col>
+            )
+        }
+        return(
+            <Group position='center'>
+                <Grid columns={ansColumn*2}>
+                    {inputAns}
+                </Grid>
+            </Group>
+        )
+    }
+
     const showAnswer = ()=>{
         let ans:React.ReactNode[] = []
         for(let i=0;i<NumberMatrix;i++){
             ans.push(
-                <Grid.Col span='content'>
+                <Grid.Col span='content' key={i}>
                     <h3 key={i}>Y{i} = {AnsMatrix[i]}</h3>
                 </Grid.Col>
             )
@@ -59,7 +100,6 @@ function Cramer() {
                 <Grid columns={NumberMatrix*2}>
                     {ans}
                 </Grid>
-                
             </Group>
         )
     }
@@ -108,6 +148,10 @@ function Cramer() {
             }
             // console.log(ans);
             setAnsMatrix(ans)
+            console.log(mA);
+            console.log(x);  
+            console.log(multiply(mA,x));
+            setCheckAns(multiply(mA,x))
         } 
     }
 
@@ -147,6 +191,7 @@ function Cramer() {
             </Grid>
         </Group>
         { status && <>{showAnswer()}</> }
+        { status && <>{showMethod()}</> }
         <Transition mounted={InValid} transition="slide-up" duration={1000} timingFunction='ease'>
             {(styles)=><Dialog opened={InValid} withBorder={false} style={{...styles,padding:0}}>
             <Alert color='red' ref={clickOutside} icon={<IconAlertTriangle strokeWidth={2.5}/>} variant='filled' title="Divided by zero!!">

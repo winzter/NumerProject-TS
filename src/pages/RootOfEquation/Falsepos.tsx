@@ -1,4 +1,4 @@
-import React , { useState }from 'react';
+import React , { Fragment, useState }from 'react';
 import InputForm from '../../components/InputForm';
 import TableOutput from '../../components/TableOutput';
 import { evaluate } from 'mathjs'
@@ -53,6 +53,7 @@ function Falsepos() {
     })
     const [newData,setNewData] = useState<FalsePostionObject[]>([]);
     const [Status,setStatus] = useState<boolean>(false);
+    const [Fxlr,setFxlr] = useState(Array(2).fill(0))
    
 
     const labelForm: LabelForm = {
@@ -81,6 +82,9 @@ function Falsepos() {
             if(check > 0 || xl > xr){
               setInValid(true)
               setStatus(false)
+              setFxlr([
+                fXl,fXr
+              ])
               setUserInput((prevState)=>{
                 return{
                   ...prevState,
@@ -244,7 +248,16 @@ function Falsepos() {
             <Transition mounted={InValid} transition="slide-up" duration={1000} timingFunction='ease'>
               {(styles)=><Dialog opened={InValid} withBorder={false} style={{...styles,padding:0}}>
                 <Alert color='red' ref={clickOutside} icon={<IconAlertTriangle strokeWidth={2.5}/>} variant='filled' title="Invalid Input!!">
-                  Please check your input XL or XR
+                  Please check your input XL or XR <br/>
+                  F(xl): {Fxlr[0]} , F(xr): {Fxlr[1]} <br/>
+                  F(xl) * F(xr) should be negative!
+                  {/* {Fxlr.map((value,i)=>{
+                    return(
+                      <Fragment key={i}>
+                        <p>{value}</p>
+                      </Fragment>
+                    )
+                  })} */}
                 </Alert>
               </Dialog>}
             </Transition>

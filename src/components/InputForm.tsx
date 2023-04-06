@@ -5,6 +5,7 @@ import {
   NumberInput,
   TextInput,
   Card,
+  Select
 } from '@mantine/core';
 
 interface InputData{
@@ -18,6 +19,8 @@ interface InputData{
 interface InputField {
     starter:(e:React.ChangeEvent<HTMLInputElement>)=>void,
     form?:InputData,
+    valXl?:number,
+    valXr?:number
     valEquationFx?:string,
     valEquationGx?:string,
     valError?:number,
@@ -36,12 +39,18 @@ function InputForm(props:InputField) {
         <form onSubmit={props.calculateRoot}>
             {props.form && 
                 <div>
+                    {/* <Select
+                        label={props.form.labelFX}
+                        data={[]}
+                        required
+                    /> */}
                     <TextInput
                         label={props.form.labelFX}
                         onChange={props.setEquationFx}
                         value={props.valEquationFx}
                         required
                     />
+
                     {props.form.labelGX && <TextInput
                         label={props.form.labelGX}
                         onChange={props.setEquationGx}
@@ -52,12 +61,14 @@ function InputForm(props:InputField) {
                         label={props.form.labelXL}
                         onChange={props.setXL}
                         precision={2}
+                        value={props.valXl}
                         required
                     />
                     {props.form.labelXR && <NumberInput
                         label={props.form.labelXR}
                         onChange={props.setXR}
                         precision={2}
+                        value={props.valXr}
                         required
                     />}
                     <NumberInput
