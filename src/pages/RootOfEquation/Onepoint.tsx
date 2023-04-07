@@ -31,8 +31,7 @@ function Onepoint() {
         EquationFX:"2x-1",
         EquationGX:"1/4+x/2",
         X:0,
-        XL:0,
-        XR:0,
+        X0:0,
         Error:0.000001,
         starter:"x"
       })
@@ -143,15 +142,16 @@ function Onepoint() {
     }
 
     const SetExampleData = (data:any[])=>{
-        if(data[0]){setUserInput((prevState)=>{
+        console.log(data);
+        
+        if(data[0]){
+        setUserInput((prevState)=>{
           console.log(data[0]);
-          
           return{
             ...prevState,
             EquationGX:data[0].label,
             X:0,
-            XL:Number(data[0].xl),
-            XR:Number(data[0].xr)
+            X0:Number(data[0].x0),
           }
         })}
       }
@@ -170,8 +170,7 @@ function Onepoint() {
                         valEquationGx={UserInput.EquationGX}
                         calculateRoot={calculateRoot}
                         setXL={SetX}
-                        valXl={UserInput.XL}
-                        valXr={UserInput.XR}
+                        valXl={UserInput.X0}
                         setERROR={SetERROR}
                         setEquationFx={SetEquationFx}
                         setEquationGx={SetEquationGx}

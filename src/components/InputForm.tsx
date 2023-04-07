@@ -38,19 +38,13 @@ interface InputField {
 function InputForm(props:InputField) {
     const [apiData,setApiData] = useState<{value:string,label:string}[]>([])
 
-    if(props.valEquationGx){
-        let select = document.querySelector(".Select")
-        if(select){
-            select.setAttribute("disabled", "")
-        }
-        
-    }
-
     useEffect(()=>{
-        axios.get("http://localhost:5000/rootofequation").then((res)=>{
+        let reqParams:string = !props.setEquationGx?"Bisection":"OnePoint"
+        axios.get(`http://localhost:5000/api/rootofequation/${reqParams}`).then((res)=>{
             console.log(res.data);
             setApiData(res.data)
-      })
+        })
+        
     },[])
 
   return (

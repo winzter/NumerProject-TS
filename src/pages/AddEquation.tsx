@@ -22,7 +22,7 @@ function AddEquation() {
     })
 
     useEffect(()=>{
-        axios.get("http://localhost:5000/rootofequation").then((res)=>{
+        axios.get("http://localhost:5000/api/rootofequation").then((res)=>{
             setApiData(res.data)
         })
     },[])

@@ -279,13 +279,6 @@ function Falsepos() {
                   Please check your input XL or XR <br/>
                   F(xl): {Fxlr[0]} , F(xr): {Fxlr[1]} <br/>
                   F(xl) * F(xr) should be negative!
-                  {/* {Fxlr.map((value,i)=>{
-                    return(
-                      <Fragment key={i}>
-                        <p>{value}</p>
-                      </Fragment>
-                    )
-                  })} */}
                 </Alert>
               </Dialog>}
             </Transition>
