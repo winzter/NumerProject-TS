@@ -11,7 +11,6 @@ import {
 } from '../styles/Navbar.style'
 
 
-
 function NavBar() {
   return (
     <NavbarContainer>

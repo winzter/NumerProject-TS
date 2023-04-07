@@ -47,7 +47,7 @@ function InputForm(props:InputField) {
     }
 
     useEffect(()=>{
-        axios.get("http://localhost:5000/").then((res)=>{
+        axios.get("http://localhost:5000/rootofequation").then((res)=>{
             console.log(res.data);
             setApiData(res.data)
       })
@@ -132,6 +132,7 @@ function InputForm(props:InputField) {
             }}
             dropdownPosition="bottom"
             maxDropdownHeight={5000}
+            shadow='md'
             onChange={(e)=>{
                 let data:any[] = []
                 console.log(e);

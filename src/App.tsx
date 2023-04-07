@@ -9,6 +9,7 @@ import Onepoint from './pages/RootOfEquation/Onepoint';
 import Newton from './pages/RootOfEquation/Newton';
 import Secant from './pages/RootOfEquation/Secant';
 import Cramer from './pages/Linear Agebra/Cramer';
+import AddEquation from './pages/AddEquation';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path="/newtonraphson" element={<Newton/>}/>
         <Route path="/secantmethod" element={<Secant/>}/>
         <Route path="/cramer" element={<Cramer/>}/>
+        <Route path="/edit" element={<AddEquation/>}/>
       </Routes>
     </>
   );
