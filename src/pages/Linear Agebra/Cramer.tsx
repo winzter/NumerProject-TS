@@ -1,5 +1,5 @@
 import React , { useState } from 'react'
-import { Group , Button , Container , Transition , Alert, Dialog , Grid , Card , Title, NumberInput} from '@mantine/core'
+import { Group , Button , Container , Transition , Alert, Dialog , Grid , Paper , Title, NumberInput} from '@mantine/core'
 import { useClickOutside } from '@mantine/hooks';
 import { IconAlertTriangle } from '@tabler/icons-react';
 import { det , multiply } from 'mathjs'
@@ -161,7 +161,7 @@ function Cramer() {
         <Group position="center">
             <Grid justify='center'>
                 <Grid.Col span="content">
-                    <Card withBorder radius='md' p='xs' shadow='md'> 
+                    <Paper withBorder radius='md' p='xs' shadow='md'> 
                         <Container size={550} px="md">
                             <form onSubmit={CalCramer}>
                                 <InputMatrix
@@ -186,7 +186,7 @@ function Cramer() {
                                 </Group>
                             </form>
                         </Container>
-                    </Card>
+                    </Paper>
                 </Grid.Col>
             </Grid>
         </Group>

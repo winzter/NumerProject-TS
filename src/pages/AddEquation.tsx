@@ -25,16 +25,24 @@ function AddEquation() {
         axios.get("http://localhost:5000/api/rootofequation").then((res)=>{
             setApiData(res.data)
         })
+        console.log(document.cookie);
+        
     },[])
 
     const Submit = (e: React.FormEvent<HTMLFormElement>)=>{
-        //e.preventDefault()
+        e.preventDefault()
         console.log(sendData);
-        axios.post("http://localhost:5000/postdata",sendData).then((res)=>{
-            console.log(res.data);
-        }).catch((err)=>{
-            console.error(err);
+        axios.post("http://localhost:5000/api/postdata",sendData,
+        {
+            headers:{
+                "authorization":document.cookie.split("=")[1]
+            }
         })
+            .then((res)=>{
+                console.log(res.data);
+            }).catch((err)=>{
+                console.error(err);
+            })
     }
 
     const SetEqu = (e:React.ChangeEvent<HTMLInputElement>)=>{

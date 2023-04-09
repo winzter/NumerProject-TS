@@ -6,7 +6,8 @@ import {
   NumberInput,
   TextInput,
   Card,
-  Select
+  Select,
+  Paper
 } from '@mantine/core';
 
 interface InputData{
@@ -49,7 +50,7 @@ function InputForm(props:InputField) {
 
   return (
     <>
-        <Card shadow="md" p="xl" radius="md" withBorder>
+        <Paper shadow="md" p="xl" radius="md" withBorder>
             <form onSubmit={props.calculateRoot}>
                 {props.form && 
                     <div>
@@ -94,7 +95,39 @@ function InputForm(props:InputField) {
                             min={0}
                             required
                         />
-                        
+                        <Select
+                            className='Select'
+                            label="Examples"
+                            data={apiData}
+                            placeholder="Pick one that you like"
+                            clearable
+                            searchable
+                            creatable
+                            getCreateLabel={(query) => `${query}`}
+                            onCreate={(query) => {
+                                const item = { value: query, label: query ,group:"History"};
+                                setApiData((current) => [...current, item]);
+                                return item;
+                            }}
+                            dropdownPosition="bottom"
+                            maxDropdownHeight={5000}
+                            shadow='md'
+                            onChange={(e)=>{
+                                let data:any[] = []
+                                console.log(e);
+                                                
+                                apiData.map((x:any)=>{
+                                    if(x.value === e){
+                                        data.push(x)
+                                    }
+                                    return data
+                                                    
+                                })
+                                console.log(data);
+                                props.setExampleData(data)
+                                                
+                            }}
+                        />
                         <Group position='center' mb="xs">
                             <Button 
                                 mt="md" 
@@ -109,40 +142,7 @@ function InputForm(props:InputField) {
                 }
                 <h2>Answer = {props.valX.toPrecision(7)}</h2>
             </form>
-        </Card>
-        {apiData.length > 0 && <Select
-            className='Select'
-            label="Example Of Equations"
-            data={apiData}
-            placeholder="Pick one that you like"
-            clearable
-            searchable
-            creatable
-            getCreateLabel={(query) => `${query}`}
-            onCreate={(query) => {
-                const item = { value: query, label: query ,group:"History"};
-                setApiData((current) => [...current, item]);
-                return item;
-            }}
-            dropdownPosition="bottom"
-            maxDropdownHeight={5000}
-            shadow='md'
-            onChange={(e)=>{
-                let data:any[] = []
-                console.log(e);
-                                
-                apiData.map((x:any)=>{
-                    if(x.value === e){
-                        data.push(x)
-                    }
-                    return data
-                                    
-                })
-                console.log(data);
-                props.setExampleData(data)
-                                
-            }}
-        />}
+        </Paper>
    </>
   )
 }
