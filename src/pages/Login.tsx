@@ -50,7 +50,7 @@ function Login() {
   return (
     <Container size={420} my={40}>
       <form onSubmit={submitData}>
-        <Title align="center">Welcome back!</Title>
+        <Title align="center">Login</Title>
         <Paper withBorder shadow="md" p={30} mt={30} radius="md">
           <TextInput label="Username" placeholder="Doraemon007" required onChange={setUsername}/>
           <PasswordInput label="Password" placeholder="Your password" required mt="md" onChange={setPassword}/>
