@@ -21,10 +21,6 @@ jobs:
       with:
         node-version: 18
     - name: install
-      run: |
-        cd NumerProject-TS
-        npm i
+      run: npm i
     - name: Bisection Test
-      run: |
-        cd NumerProject-TS
-        npm test
+      run: npm test
