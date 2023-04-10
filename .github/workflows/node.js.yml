@@ -22,5 +22,5 @@ jobs:
         node-version: 18
     - name: install
       run: npm i
-    - name: Bisection Test
+    - name: Calculate Test
       run: npm test
