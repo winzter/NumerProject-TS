@@ -5,7 +5,6 @@ import {
   Button,
   NumberInput,
   TextInput,
-  Card,
   Select,
   Paper
 } from '@mantine/core';
@@ -39,22 +38,23 @@ interface InputField {
 function InputForm(props:InputField) {
     const [apiData,setApiData] = useState<{value:string,label:string}[]>([])
 
-    useEffect(()=>{
-        let reqParams:string = !props.setEquationGx?"Bisection":"OnePoint"
-        axios.get(`http://localhost:5000/api/rootofequation/${reqParams}`).then((res)=>{
-            console.log(res.data);
-            setApiData(res.data)
-        })
-        
-    },[])
+    // useEffect(()=>{
+    //     let reqParams:string = !props.setEquationGx?"Bisection":"OnePoint"
+    //     axios.get(`http://localhost:5000/api/rootofequation/${reqParams}`).then((res)=>{
+    //         console.log(res.data);
+    //         setApiData(res.data)
+    //     })
+    // },[])
 
   return (
     <>
         <Paper shadow="md" p="xl" radius="md" withBorder>
-            <form onSubmit={props.calculateRoot}>
+            <form onSubmit={props.calculateRoot} data-testid="form">
                 {props.form && 
                     <div>
+                        <input type="text" data-testid="aa" id='aa'/>
                         <TextInput
+                            data-testid="equ"
                             label={props.form.labelFX}
                             onChange={(e)=>{
                                 props.setEquationFx(e)
@@ -63,6 +63,7 @@ function InputForm(props:InputField) {
                                 return item;
                             }}
                             value={props.valEquationFx}
+                            placeholder='Input F(x)'
                             required
                         />
 
@@ -73,6 +74,7 @@ function InputForm(props:InputField) {
                             required
                         />}
                         <NumberInput
+                            data-testid="xl"
                             label={props.form.labelXL}
                             onChange={props.setXL}
                             precision={2}
@@ -80,6 +82,7 @@ function InputForm(props:InputField) {
                             required
                         />
                         {props.form.labelXR && <NumberInput
+                            data-testid="xr"
                             label={props.form.labelXR}
                             onChange={props.setXR}
                             precision={2}
@@ -87,6 +90,7 @@ function InputForm(props:InputField) {
                             required
                         />}
                         <NumberInput
+                            data-testid="err"
                             label="Error"
                             onChange={props.setERROR}
                             value={props.valError}
@@ -130,6 +134,7 @@ function InputForm(props:InputField) {
                         />
                         <Group position='center' mb="xs">
                             <Button 
+                                data-testid="btn"
                                 mt="md" 
                                 size='sm' 
                                 type='submit' 
@@ -140,7 +145,8 @@ function InputForm(props:InputField) {
                         </Group>
                     </div>
                 }
-                <h2>Answer = {props.valX.toPrecision(7)}</h2>
+                {/* <h2>Answer = {props.valX.toPrecision(7)}</h2> */}
+                <h2 data-testid="ans">Answer = {props.valX}</h2>
             </form>
         </Paper>
    </>
